@@ -1,0 +1,7 @@
+# Três dependências, e nenhuma no navegador.
+# O painel é HTML, CSS e JavaScript escritos na mão: zero biblioteca de
+# gráfico, zero CDN, zero rastreador. Ver docs/decisoes.md.
+
+pandas
+numpy
+pyyaml

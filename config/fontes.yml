@@ -1,0 +1,18 @@
+# De onde vem a base que este painel mostra.
+#
+# A base é gerada pelo projeto base-sintetica-seguros. Clone os dois
+# repositórios lado a lado e rode o gerador antes de montar o painel.
+
+base:
+  caminho: "../base-sintetica-seguros/dados/tratado"
+  repositorio: "https://github.com/Lucasnevesads/base-sintetica-seguros"
+
+tabelas:
+  - apolices
+  - parcelas
+  - crm_negocios
+  - planilha_producao
+
+# O painel também não lê o gabarito. Ele mostra a operação como ela é
+# vista no dia a dia, e no dia a dia ninguém tem a resposta na mão.
+gabarito: gabarito_defeitos

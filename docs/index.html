@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Norte Garantia · Produção e comissões</title>
+<meta name="description" content="Painel de produção e comissões da Norte Garantia. Dados sintéticos.">
+<style>
+/* Mobile-first: o padrão é o celular. As media queries só acrescentam
+   espaço quando a tela permite, nunca o contrário. */
+:root {
+  --plano: #f9f9f7;
+  --superficie: #fcfcfb;
+  --tinta: #0b0b0b;
+  --tinta-2: #52514e;
+  --tinta-3: #898781;
+  --grade: #e1e0d9;
+  --linha: #c3c2b7;
+  --borda: rgba(11, 11, 11, .10);
+  --comercial: #2a78d6;
+  --financeiro: #eb6834;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --plano: #0d0d0d;
+    --superficie: #1a1a19;
+    --tinta: #ffffff;
+    --tinta-2: #c3c2b7;
+    --tinta-3: #898781;
+    --grade: #2c2c2a;
+    --linha: #383835;
+    --borda: rgba(255, 255, 255, .10);
+    --comercial: #3987e5;
+    --financeiro: #d95926;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 20px 16px 56px;
+  background: var(--plano);
+  color: var(--tinta);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+.envelope { max-width: 1080px; margin: 0 auto; }
+
+/* ---- cabeçalho ---- */
+header { margin-bottom: 22px; }
+h1 { font-size: 1.45rem; line-height: 1.25; margin: 0 0 6px; letter-spacing: -.01em; }
+.subtitulo { color: var(--tinta-2); font-size: .93rem; margin: 0; }
+.selo {
+  display: inline-block; margin-top: 12px; padding: 4px 10px;
+  border: 1px solid var(--borda); border-radius: 999px;
+  font-size: .74rem; color: var(--tinta-2); background: var(--superficie);
+}
+
+/* ---- o aviso das duas réguas ---- */
+.reguas {
+  background: var(--superficie); border: 1px solid var(--borda);
+  border-left: 3px solid var(--comercial);
+  border-radius: 10px; padding: 14px 16px; margin: 22px 0;
+  font-size: .9rem; color: var(--tinta-2);
+}
+.reguas strong { color: var(--tinta); }
+
+/* ---- cartões ---- */
+.cartoes { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 620px) { .cartoes { grid-template-columns: repeat(3, 1fr); } }
+.cartao {
+  background: var(--superficie); border: 1px solid var(--borda);
+  border-radius: 12px; padding: 16px;
+}
+.cartao .marca { display: block; width: 26px; height: 3px; border-radius: 2px; margin-bottom: 12px; }
+.marca.comercial { background: var(--comercial); }
+.marca.financeiro { background: var(--financeiro); }
+.cartao h2 { font-size: .82rem; font-weight: 600; margin: 0 0 2px; color: var(--tinta-2); text-transform: uppercase; letter-spacing: .04em; }
+.cartao .regua { font-size: .76rem; color: var(--tinta-3); margin: 0 0 10px; }
+.cartao .valor { font-size: 1.62rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+.cartao .detalhe { font-size: .8rem; color: var(--tinta-3); margin-top: 4px; }
+
+/* ---- seções ---- */
+section { margin-top: 34px; }
+section > h2 { font-size: 1.05rem; margin: 0 0 4px; }
+section > .nota { font-size: .85rem; color: var(--tinta-2); margin: 0 0 14px; }
+.painel {
+  background: var(--superficie); border: 1px solid var(--borda);
+  border-radius: 12px; padding: 16px;
+}
+
+/* ---- legenda ---- */
+.legenda { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 14px; font-size: .84rem; color: var(--tinta-2); }
+.legenda span { display: flex; align-items: center; gap: 7px; }
+.legenda i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+/* ---- gráfico ---- */
+.rolagem { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.rolagem svg { display: block; min-width: 540px; width: 100%; height: auto; }
+.dica-rolagem { font-size: .76rem; color: var(--tinta-3); margin: 8px 0 0; }
+@media (min-width: 620px) { .dica-rolagem { display: none; } }
+.barra { transition: opacity .12s; cursor: pointer; }
+.grupo:hover .barra { opacity: .45; }
+.grupo:hover .barra.ativa, .grupo.tocado .barra { opacity: 1; }
+.eixo { fill: var(--tinta-3); font-size: 12px; }
+.grade-linha { stroke: var(--grade); stroke-width: 1; }
+.base-linha { stroke: var(--linha); stroke-width: 1; }
+
+#dica {
+  position: fixed; z-index: 20; pointer-events: none; opacity: 0;
+  transition: opacity .12s; background: var(--superficie);
+  border: 1px solid var(--borda); border-radius: 9px;
+  padding: 9px 12px; font-size: .82rem; color: var(--tinta);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .16); max-width: 240px;
+}
+#dica .mes { font-weight: 700; margin-bottom: 5px; }
+#dica .linha { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+#dica i { width: 9px; height: 9px; border-radius: 2px; flex: none; }
+#dica .rotulo { color: var(--tinta-2); }
+#dica .numero { margin-left: auto; font-weight: 600; }
+
+/* ---- tabelas ---- */
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--borda); }
+th { font-size: .74rem; text-transform: uppercase; letter-spacing: .04em; color: var(--tinta-3); font-weight: 600; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.nome { font-weight: 600; }
+
+/* No celular a tabela vira lista: quatro colunas em 375px estouram a tela
+   e obrigam a rolar de lado, que é o pior jeito de ler número. Cada linha
+   passa a ser um bloco com o nome em cima e os valores rotulados abaixo. */
+@media (max-width: 619px) {
+  table, tbody, tr, td { display: block; }
+  thead { display: none; }
+  tr { padding: 12px 0; border-bottom: 1px solid var(--borda); }
+  tr:last-child { border-bottom: 0; }
+  td { border: 0; padding: 3px 0; display: flex; justify-content: space-between; gap: 12px; }
+  td::before { content: attr(data-rotulo); color: var(--tinta-3); font-size: .8rem; }
+  td:first-child { display: block; margin-bottom: 7px; }
+  td:first-child::before { content: none; }
+  td.num { text-align: right; }
+}
+
+/* Barra de participação dentro da tabela, para dar magnitude sem
+   precisar de um gráfico separado. */
+.trilho { height: 5px; border-radius: 3px; background: var(--grade); margin-top: 5px; }
+.trilho > div { height: 100%; border-radius: 3px; background: var(--comercial); }
+
+footer { margin-top: 42px; padding-top: 18px; border-top: 1px solid var(--borda); font-size: .82rem; color: var(--tinta-3); }
+footer a { color: var(--tinta-2); }
+</style>
+</head>
+<body>
+<div class="envelope">
+
+<header>
+  <h1>Norte Garantia</h1>
+  <p class="subtitulo">Produção e comissões · 01/01/2025 a 31/12/2025</p>
+  <span class="selo">Dados sintéticos · empresa fictícia</span>
+</header>
+
+<div class="reguas">
+  <strong>Este painel usa duas réguas e nunca as subtrai.</strong>
+  A <strong>produção comercial</strong> conta o contrato cheio na data da venda.
+  A <strong>comissão recebida</strong> conta cada parcela na data em que o dinheiro entrou.
+  As duas estão certas e medem coisas diferentes: uma parcela vendida em dezembro
+  cai no caixa em janeiro. Comparar uma com a outra faz aparecer um rombo que não existe.
+</div>
+
+<div class="cartoes">      <div class="cartao">
+        <span class="marca comercial"></span>
+        <h2>Produção comercial</h2>
+        <p class="regua">contrato cheio, na data da venda</p>
+        <div class="valor">R$ 4.080.660,80</div>
+        <div class="detalhe">791 negócios fechados</div>
+      </div>
+      <div class="cartao">
+        <span class="marca financeiro"></span>
+        <h2>Comissão recebida</h2>
+        <p class="regua">parcela paga, na data do pagamento</p>
+        <div class="valor">R$ 3.450.030,87</div>
+        <div class="detalhe">1307 parcelas liquidadas</div>
+      </div>
+      <div class="cartao">
+        <span class="marca financeiro"></span>
+        <h2>A receber</h2>
+        <p class="regua">parcela que ainda não venceu</p>
+        <div class="valor">R$ 446.084,93</div>
+        <div class="detalhe">229 parcelas em aberto</div>
+      </div></div>
+
+<section>
+  <h2>Mês a mês</h2>
+  <p class="nota">Cada série usa a data que lhe é própria. Elas ficam lado a lado, nunca somadas nem subtraídas.</p>
+  <div class="painel">
+    <div class="legenda">
+      <span><i style="background: var(--comercial)"></i> Produção comercial <span style="color: var(--tinta-3)">(data da venda)</span></span>
+      <span><i style="background: var(--financeiro)"></i> Comissão recebida <span style="color: var(--tinta-3)">(data do pagamento)</span></span>
+    </div>
+    <div class="rolagem"><svg id="grafico" viewBox="0 0 720 300" role="img" aria-label="Gráfico de barras da produção mês a mês. Cada mês tem duas barras: produção comercial, contada na data da venda, e comissão recebida, contada na data do pagamento."></svg></div>
+    <p class="dica-rolagem">Arraste o gráfico para o lado para ver o ano inteiro.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Por seguradora</h2>
+  <p class="nota">Onde a carteira está concentrada.</p>
+  <div class="painel"><table>
+    <thead><tr>
+      <th>Seguradora</th><th class="num">Negócios</th>
+      <th class="num">Produção</th><th class="num">Recebido</th>
+    </tr></thead>
+    <tbody>      <tr>
+        <td>
+          <span class="nome">Aurora Seguradora</span>
+          <div class="trilho"><div style="width: 100.0%"></div></div>
+        </td>
+        <td class="num" data-rotulo="Negócios">259</td>
+        <td class="num" data-rotulo="Produção">R$ 1.280.348,87</td>
+        <td class="num" data-rotulo="Recebido">R$ 1.073.643,91</td>
+      </tr>
+      <tr>
+        <td>
+          <span class="nome">Vertente Seguros</span>
+          <div class="trilho"><div style="width: 62.8%"></div></div>
+        </td>
+        <td class="num" data-rotulo="Negócios">173</td>
+        <td class="num" data-rotulo="Produção">R$ 804.235,74</td>
+        <td class="num" data-rotulo="Recebido">R$ 691.147,70</td>
+      </tr>
+      <tr>
+        <td>
+          <span class="nome">Meridiano Seguradora</span>
+          <div class="trilho"><div style="width: 53.7%"></div></div>
+        </td>
+        <td class="num" data-rotulo="Negócios">115</td>
+        <td class="num" data-rotulo="Produção">R$ 686.982,20</td>
+        <td class="num" data-rotulo="Recebido">R$ 623.642,48</td>
+      </tr>
+      <tr>
+        <td>
+          <span class="nome">Farol Seguros</span>
+          <div class="trilho"><div style="width: 51.9%"></div></div>
+        </td>
+        <td class="num" data-rotulo="Negócios">96</td>
+        <td class="num" data-rotulo="Produção">R$ 664.955,61</td>
+        <td class="num" data-rotulo="Recebido">R$ 634.639,40</td>
+      </tr>
+      <tr>
+        <td>
+          <span class="nome">Pilar Garantias</span>
+          <div class="trilho"><div style="width: 50.3%"></div></div>
+        </td>
+        <td class="num" data-rotulo="Negócios">148</td>
+        <td class="num" data-rotulo="Produção">R$ 644.138,38</td>
+        <td class="num" data-rotulo="Recebido">R$ 426.957,38</td>
+      </tr></tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Por consultor</h2>
+  <p class="nota">Produção pela data da venda, que é a pergunta comercial: quem vendeu. <strong>5 linha(s) da planilha tinham espaço sobrando no nome do consultor</strong> e foram normalizadas aqui: sem isso, a mesma pessoa apareceria duas vezes e nenhum dos dois total estaria certo. O conserto de verdade é na origem.</p>
+  <div class="painel"><table>
+    <thead><tr>
+      <th>Consultor</th><th class="num">Negócios</th>
+      <th class="num">Produção</th><th class="num">Ticket médio</th>
+    </tr></thead>
+    <tbody>      <tr>
+        <td class="nome">Maitê Ramos</td>
+        <td class="num" data-rotulo="Negócios">156</td>
+        <td class="num" data-rotulo="Produção">R$ 964.985,73</td>
+        <td class="num" data-rotulo="Ticket médio">R$ 6.185,81</td>
+      </tr>
+      <tr>
+        <td class="nome">Raul Andrade</td>
+        <td class="num" data-rotulo="Negócios">171</td>
+        <td class="num" data-rotulo="Produção">R$ 912.457,56</td>
+        <td class="num" data-rotulo="Ticket médio">R$ 5.336,01</td>
+      </tr>
+      <tr>
+        <td class="nome">Emilly Carvalho</td>
+        <td class="num" data-rotulo="Negócios">162</td>
+        <td class="num" data-rotulo="Produção">R$ 795.585,41</td>
+        <td class="num" data-rotulo="Ticket médio">R$ 4.911,02</td>
+      </tr>
+      <tr>
+        <td class="nome">Augusto Fogaça</td>
+        <td class="num" data-rotulo="Negócios">144</td>
+        <td class="num" data-rotulo="Produção">R$ 725.941,91</td>
+        <td class="num" data-rotulo="Ticket médio">R$ 5.041,26</td>
+      </tr>
+      <tr>
+        <td class="nome">Ravi Sampaio</td>
+        <td class="num" data-rotulo="Negócios">158</td>
+        <td class="num" data-rotulo="Produção">R$ 681.690,19</td>
+        <td class="num" data-rotulo="Ticket médio">R$ 4.314,49</td>
+      </tr></tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Maiores tomadores</h2>
+  <p class="nota">Os oito clientes que mais produziram comissão no período.</p>
+  <div class="painel"><table>
+    <thead><tr><th>Tomador</th><th class="num">Negócios</th><th class="num">Produção</th></tr></thead>
+    <tbody>      <tr>
+        <td class="nome">da Mata</td>
+        <td class="num" data-rotulo="Negócios">12</td>
+        <td class="num" data-rotulo="Produção">R$ 410.335,03</td>
+      </tr>
+      <tr>
+        <td class="nome">Santos e Filhos</td>
+        <td class="num" data-rotulo="Negócios">8</td>
+        <td class="num" data-rotulo="Produção">R$ 396.599,99</td>
+      </tr>
+      <tr>
+        <td class="nome">Teixeira Teixeira e Filhos</td>
+        <td class="num" data-rotulo="Negócios">8</td>
+        <td class="num" data-rotulo="Produção">R$ 342.848,72</td>
+      </tr>
+      <tr>
+        <td class="nome">Vasconcelos</td>
+        <td class="num" data-rotulo="Negócios">16</td>
+        <td class="num" data-rotulo="Produção">R$ 233.391,26</td>
+      </tr>
+      <tr>
+        <td class="nome">Leão Gomes - EI</td>
+        <td class="num" data-rotulo="Negócios">7</td>
+        <td class="num" data-rotulo="Produção">R$ 189.924,52</td>
+      </tr>
+      <tr>
+        <td class="nome">Porto</td>
+        <td class="num" data-rotulo="Negócios">7</td>
+        <td class="num" data-rotulo="Produção">R$ 180.681,05</td>
+      </tr>
+      <tr>
+        <td class="nome">Sá</td>
+        <td class="num" data-rotulo="Negócios">10</td>
+        <td class="num" data-rotulo="Produção">R$ 157.795,89</td>
+      </tr>
+      <tr>
+        <td class="nome">Castro</td>
+        <td class="num" data-rotulo="Negócios">7</td>
+        <td class="num" data-rotulo="Produção">R$ 142.483,92</td>
+      </tr></tbody>
+  </table></div>
+</section>
+
+<footer>
+  <p><strong>Norte Garantia</strong> é uma corretora de seguro garantia fictícia.
+  Nenhum dado de cliente ou de empresa real é usado, em nenhuma etapa.
+  A base é gerada por <a href="https://github.com/Lucasnevesads/base-sintetica-seguros">base-sintetica-seguros</a>
+  e conferida por <a href="https://github.com/Lucasnevesads/auditoria-comissoes">auditoria-comissoes</a>.</p>
+  <p>Página estática, sem servidor e sem rastreamento. Gerada em 31/07/2026.</p>
+</footer>
+
+</div>
+
+<div id="dica" role="status" aria-live="polite"></div>
+
+<script>
+const DADOS = {"empresa": "Norte Garantia", "periodo": {"inicio": "01/01/2025", "fim": "31/12/2025"}, "cartoes": [{"titulo": "Produção comercial", "regua": "contrato cheio, na data da venda", "valor": 4080660.8, "detalhe": "791 negócios fechados", "papel": "comercial"}, {"titulo": "Comissão recebida", "regua": "parcela paga, na data do pagamento", "valor": 3450030.87, "detalhe": "1307 parcelas liquidadas", "papel": "financeiro"}, {"titulo": "A receber", "regua": "parcela que ainda não venceu", "valor": 446084.93, "detalhe": "229 parcelas em aberto", "papel": "financeiro"}], "cancelado": {"valor": 138150.95, "quantidade": 19}, "nomes_corrigidos": 5, "por_mes": [{"mes": "jan", "comercial": 314742.46, "recebido": 51768.74}, {"mes": "fev", "comercial": 465072.42, "recebido": 203556.82}, {"mes": "mar", "comercial": 436611.38, "recebido": 367414.74}, {"mes": "abr", "comercial": 348502.94, "recebido": 326054.29}, {"mes": "mai", "comercial": 399808.48, "recebido": 397478.54}, {"mes": "jun", "comercial": 311166.64, "recebido": 266557.7}, {"mes": "jul", "comercial": 409284.55, "recebido": 276151.62}, {"mes": "ago", "comercial": 169538.19, "recebido": 395108.98}, {"mes": "set", "comercial": 251495.28, "recebido": 227741.52}, {"mes": "out", "comercial": 252882.97, "recebido": 303063.25}, {"mes": "nov", "comercial": 375655.14, "recebido": 271646.79}, {"mes": "dez", "comercial": 345900.35, "recebido": 363487.88}], "por_seguradora": [{"nome": "Aurora Seguradora", "producao": 1280348.87, "recebido": 1073643.91, "negocios": 259, "participacao": 31.4}, {"nome": "Vertente Seguros", "producao": 804235.74, "recebido": 691147.7, "negocios": 173, "participacao": 19.7}, {"nome": "Meridiano Seguradora", "producao": 686982.2, "recebido": 623642.48, "negocios": 115, "participacao": 16.8}, {"nome": "Farol Seguros", "producao": 664955.61, "recebido": 634639.4, "negocios": 96, "participacao": 16.3}, {"nome": "Pilar Garantias", "producao": 644138.38, "recebido": 426957.38, "negocios": 148, "participacao": 15.8}], "por_consultor": [{"nome": "Maitê Ramos", "producao": 964985.73, "negocios": 156, "ticket": 6185.81}, {"nome": "Raul Andrade", "producao": 912457.56, "negocios": 171, "ticket": 5336.01}, {"nome": "Emilly Carvalho", "producao": 795585.41, "negocios": 162, "ticket": 4911.02}, {"nome": "Augusto Fogaça", "producao": 725941.91, "negocios": 144, "ticket": 5041.26}, {"nome": "Ravi Sampaio", "producao": 681690.19, "negocios": 158, "ticket": 4314.49}], "maiores_tomadores": [{"nome": "da Mata", "producao": 410335.03, "negocios": 12}, {"nome": "Santos e Filhos", "producao": 396599.99, "negocios": 8}, {"nome": "Teixeira Teixeira e Filhos", "producao": 342848.72, "negocios": 8}, {"nome": "Vasconcelos", "producao": 233391.26, "negocios": 16}, {"nome": "Leão Gomes - EI", "producao": 189924.52, "negocios": 7}, {"nome": "Porto", "producao": 180681.05, "negocios": 7}, {"nome": "Sá", "producao": 157795.89, "negocios": 10}, {"nome": "Castro", "producao": 142483.92, "negocios": 7}]};
+
+const moeda = new Intl.NumberFormat("pt-BR", {
+  style: "currency", currency: "BRL", maximumFractionDigits: 0
+});
+const moedaCheia = new Intl.NumberFormat("pt-BR", {
+  style: "currency", currency: "BRL", minimumFractionDigits: 2
+});
+
+function desenharGrafico() {
+  const svg = document.getElementById("grafico");
+  const meses = DADOS.por_mes;
+  const L = 720, A = 300;
+  const margem = { topo: 16, direita: 8, base: 30, esquerda: 62 };
+  const largura = L - margem.esquerda - margem.direita;
+  const altura = A - margem.topo - margem.base;
+
+  const maximo = Math.max(...meses.flatMap(m => [m.comercial, m.recebido])) || 1;
+  const teto = Math.ceil(maximo / 100000) * 100000;
+  const y = v => margem.topo + altura - (v / teto) * altura;
+
+  const passo = largura / meses.length;
+  const larguraBarra = Math.min(16, (passo - 8) / 2);
+  const svgNS = "http://www.w3.org/2000/svg";
+  const criar = (tag, atributos) => {
+    const no = document.createElementNS(svgNS, tag);
+    for (const chave in atributos) no.setAttribute(chave, atributos[chave]);
+    return no;
+  };
+
+  // Grade horizontal, recuada de propósito: ela orienta, não compete.
+  const passos = 4;
+  for (let i = 0; i <= passos; i++) {
+    const valor = (teto / passos) * i;
+    const linhaY = y(valor);
+    svg.appendChild(criar("line", {
+      x1: margem.esquerda, x2: L - margem.direita, y1: linhaY, y2: linhaY,
+      class: i === 0 ? "base-linha" : "grade-linha"
+    }));
+    const rotulo = criar("text", {
+      x: margem.esquerda - 10, y: linhaY + 4, "text-anchor": "end", class: "eixo"
+    });
+    rotulo.textContent = valor === 0 ? "0" : moeda.format(valor).replace(/\s/g, " ");
+    svg.appendChild(rotulo);
+  }
+
+  meses.forEach((mes, i) => {
+    const centro = margem.esquerda + passo * i + passo / 2;
+    const grupo = criar("g", { class: "grupo", tabindex: "0",
+      "aria-label": `${mes.mes}: produção ${moedaCheia.format(mes.comercial)}, recebido ${moedaCheia.format(mes.recebido)}` });
+
+    [["comercial", -larguraBarra - 1], ["recebido", 1]].forEach(([campo, deslocamento]) => {
+      const valor = mes[campo];
+      const alturaBarra = Math.max(1, margem.topo + altura - y(valor));
+      grupo.appendChild(criar("rect", {
+        x: centro + deslocamento, y: y(valor),
+        width: larguraBarra, height: alturaBarra, rx: 3,
+        fill: `var(--${campo === "comercial" ? "comercial" : "financeiro"})`,
+        class: "barra"
+      }));
+    });
+
+    const rotulo = criar("text", {
+      x: centro, y: A - 10, "text-anchor": "middle", class: "eixo"
+    });
+    rotulo.textContent = mes.mes;
+    grupo.appendChild(rotulo);
+
+    grupo.addEventListener("pointerenter", e => mostrarDica(e, mes));
+    grupo.addEventListener("pointermove", e => posicionarDica(e));
+    grupo.addEventListener("pointerleave", esconderDica);
+    grupo.addEventListener("focus", e => mostrarDica(e, mes, grupo));
+    grupo.addEventListener("blur", esconderDica);
+    svg.appendChild(grupo);
+  });
+}
+
+const dica = document.getElementById("dica");
+
+function mostrarDica(evento, mes, alvo) {
+  dica.innerHTML = `
+    <div class="mes">${mes.mes}</div>
+    <div class="linha"><i style="background: var(--comercial)"></i>
+      <span class="rotulo">Produção</span>
+      <span class="numero">${moedaCheia.format(mes.comercial)}</span></div>
+    <div class="linha"><i style="background: var(--financeiro)"></i>
+      <span class="rotulo">Recebido</span>
+      <span class="numero">${moedaCheia.format(mes.recebido)}</span></div>`;
+  dica.style.opacity = "1";
+  if (alvo) {
+    const caixa = alvo.getBoundingClientRect();
+    colocar(caixa.left + caixa.width / 2, caixa.top);
+  } else {
+    posicionarDica(evento);
+  }
+}
+
+function posicionarDica(evento) { colocar(evento.clientX, evento.clientY); }
+
+function colocar(x, y) {
+  const caixa = dica.getBoundingClientRect();
+  const esquerda = Math.min(Math.max(8, x - caixa.width / 2), innerWidth - caixa.width - 8);
+  const topo = y - caixa.height - 14 < 8 ? y + 18 : y - caixa.height - 14;
+  dica.style.left = esquerda + "px";
+  dica.style.top = topo + "px";
+}
+
+function esconderDica() { dica.style.opacity = "0"; }
+
+desenharGrafico();
+</script>
+</body>
+</html>

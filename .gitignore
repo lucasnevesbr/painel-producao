@@ -1,0 +1,36 @@
+# ---- Dado nunca sobe ----
+dados/
+*.csv
+*.xlsx
+*.xls
+*.parquet
+*.db
+*.sqlite3
+
+# docs/index.html É o produto deste projeto e é o que o GitHub Pages
+# serve, então ele sobe.
+!docs/index.html
+
+# ---- Segredo nunca sobe ----
+.env
+.env.*
+*.pem
+*.key
+credenciais*
+segredos*
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# ---- Sistema e editor ----
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
