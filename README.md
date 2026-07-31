@@ -24,13 +24,19 @@ Um painel que joga os dois números lado a lado sem dizer isso não resolve o pr
 
 Uma página estática única, gerada em Python a partir da base da Norte Garantia, que mostra produção, recebimento, seguradoras, consultores e maiores clientes.
 
-Três decisões que não eram óbvias:
+Quatro decisões que não eram óbvias:
 
-**1. As duas réguas nunca se subtraem, e isso é regra do código.** Cada número carrega o nome da régua que usou, e nenhuma função em `src/metricas.py` cruza uma com a outra. O aviso no topo da página explica a diferença em duas frases, antes de qualquer valor aparecer. O painel foi desenhado para que o erro da auditoria não possa acontecer de novo.
+**1. Painel próprio em vez de Power BI ou Looker Studio.** A pergunta certa não é qual ferramenta é mais poderosa, é de que jeito aquela diretoria recebe melhor a informação. Ferramenta de BI entrega o layout dela e o vocabulário dela. Um painel próprio entrega o recorte que a diretoria já está acostumada a ler, com o aviso das duas réguas exatamente onde ele precisa estar.
 
-**2. Nenhuma biblioteca no navegador.** O gráfico é SVG escrito na mão, com tooltip e navegação por teclado. Sem CDN, sem framework de dashboard, sem rastreador. A página inteira tem 22 KB e abre em qualquer celular, inclusive com internet ruim, que é a realidade de quem vai abrir isso.
+É escolha de contexto, não regra geral: ferramenta de BI ganha fácil quando o dado atualiza sozinho, quando muita gente precisa fatiar por conta própria ou quando não há ninguém para manter código. **A hora de trocar é quando começarem a pedir filtro.**
 
-**3. O painel corrige o nome sujo, mas avisa que corrigiu.** Cinco linhas da planilha têm espaço sobrando no nome do consultor, e sem tratar isso a mesma pessoa apareceria duas vezes. O painel normaliza e escreve, na própria seção, que normalizou e quantas linhas. Corrigir em silêncio faria o painel mentir de outro jeito: o problema nunca chegaria a quem pode consertá-lo na origem.
+O que torna essa decisão reversível é a próxima: as tabelas de origem seguem em formato longo, um grão por arquivo, data em ISO e nada de significado escondido em cor ou em nome de aba. A mesma base sobe no Power BI, no Looker Studio ou num Postgres sem tratamento nenhum. **O painel é a apresentação; a estrutura do dado é a fundação, e ela continua portátil.**
+
+**2. As duas réguas nunca se subtraem, e isso é regra do código.** Cada número carrega o nome da régua que usou, e nenhuma função em `src/metricas.py` cruza uma com a outra. O aviso no topo da página explica a diferença em duas frases, antes de qualquer valor aparecer. O painel foi desenhado para que o erro da auditoria não possa acontecer de novo.
+
+**3. Nenhuma biblioteca no navegador.** O gráfico é SVG escrito na mão, com tooltip e navegação por teclado. Sem CDN, sem framework de dashboard, sem rastreador. A página inteira tem 22 KB e abre em qualquer celular, inclusive com internet ruim, que é a realidade de quem vai abrir isso.
+
+**4. O painel corrige o nome sujo, mas avisa que corrigiu.** Cinco linhas da planilha têm espaço sobrando no nome do consultor, e sem tratar isso a mesma pessoa apareceria duas vezes. O painel normaliza e escreve, na própria seção, que normalizou e quantas linhas. Corrigir em silêncio faria o painel mentir de outro jeito: o problema nunca chegaria a quem pode consertá-lo na origem.
 
 ## O resultado
 
