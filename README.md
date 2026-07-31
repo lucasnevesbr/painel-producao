@@ -20,6 +20,8 @@ A causa é sempre a mesma: **o CRM conta o contrato cheio na data da venda, o ba
 
 Um painel que joga os dois números lado a lado sem dizer isso não resolve o problema. Ele automatiza o problema.
 
+> **Essa reunião não é hipotética.** Separar os dois indicadores nos relatórios, e nunca subtrair um do outro, foi a primeira recomendação que eu fiz depois de conferir o fechamento de uma corretora de seguro garantia de verdade, onde trabalho. Este painel é essa recomendação construída.
+
 ## O que eu fiz
 
 Uma página estática única, gerada em Python a partir da base da Norte Garantia, que mostra produção, recebimento, seguradoras, consultores e maiores clientes.
