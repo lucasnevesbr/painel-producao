@@ -97,7 +97,10 @@ section > .nota { font-size: .85rem; color: var(--tinta-2); margin: 0 0 14px; }
 
 /* ---- gráfico ---- */
 .rolagem { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.rolagem svg { display: block; min-width: 540px; width: 100%; height: auto; }
+/* max-width existe porque o SVG escala pela largura e a altura vem junto:
+   num monitor largo, sem trava, o gráfico passava de 500px de altura e
+   engolia a tela. min-width mantém os rótulos legíveis no celular. */
+.rolagem svg { display: block; min-width: 540px; max-width: 820px; width: 100%; height: auto; margin: 0 auto; }
 .dica-rolagem { font-size: .76rem; color: var(--tinta-3); margin: 8px 0 0; }
 @media (min-width: 620px) { .dica-rolagem { display: none; } }
 .barra { transition: opacity .12s; cursor: pointer; }
@@ -375,7 +378,9 @@ function desenharGrafico() {
   const svg = document.getElementById("grafico");
   const meses = DADOS.por_mes;
   const L = 720, A = 300;
-  const margem = { topo: 16, direita: 8, base: 30, esquerda: 62 };
+  // esquerda precisa caber "R$ 500.000" a 12px mais o respiro de 10.
+  // Com 62 o "R$" ficava cortado na borda.
+  const margem = { topo: 16, direita: 8, base: 30, esquerda: 84 };
   const largura = L - margem.esquerda - margem.direita;
   const altura = A - margem.topo - margem.base;
 
