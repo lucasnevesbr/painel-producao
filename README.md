@@ -8,7 +8,11 @@
 ![Python](https://img.shields.io/badge/Python-3.14-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Sem dependência no navegador](https://img.shields.io/badge/navegador-zero_biblioteca-16A34A?style=flat-square)
 
+![Topo do painel da Norte Garantia. Título, período de 01/01/2025 a 31/12/2025 e um selo de dados sintéticos. Abaixo, um aviso destacado explicando que o painel usa duas réguas e nunca as subtrai. Em seguida, três cartões: produção comercial de R$ 4.080.660,80 em 791 negócios, comissão recebida de R$ 3.450.030,87 em 1.307 parcelas, e a receber de R$ 446.084,93 em 229 parcelas.](docs/print.png)
+
 🔗 **Ver funcionando:** https://lucasnevesads.github.io/painel-producao/
+
+A imagem é o tema claro. A página também tem tema escuro, escolhido e não invertido, que aparece sozinho se o seu sistema estiver nele.
 
 ---
 
