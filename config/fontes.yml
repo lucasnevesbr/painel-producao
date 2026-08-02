@@ -5,7 +5,7 @@
 
 base:
   caminho: "../base-sintetica-seguros/dados/tratado"
-  repositorio: "https://github.com/Lucasnevesads/base-sintetica-seguros"
+  repositorio: "https://github.com/lucasnevesbr/base-sintetica-seguros"
 
 tabelas:
   - apolices

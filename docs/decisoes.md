@@ -34,7 +34,7 @@ Vale registrar que **isso é uma escolha de contexto, não uma regra geral**. Fe
 
 **A escolha:** nenhuma função de `src/metricas.py` cruza produção comercial com comissão recebida. Cada número carrega o nome da régua que usou, e o aviso no topo da página explica a diferença antes de qualquer valor aparecer.
 
-**Por quê:** a diferença entre vendido e recebido **não é um indicador**. Ela é a distância entre a data da venda e a data do pagamento, e mostrá-la como número faz o leitor achar que é dinheiro faltando. Foi esse erro que a [auditoria](https://github.com/Lucasnevesads/auditoria-comissoes) desmontou. Um painel que o reproduz automatiza o problema em vez de resolvê-lo.
+**Por quê:** a diferença entre vendido e recebido **não é um indicador**. Ela é a distância entre a data da venda e a data do pagamento, e mostrá-la como número faz o leitor achar que é dinheiro faltando. Foi esse erro que a [auditoria](https://github.com/lucasnevesbr/auditoria-comissoes) desmontou. Um painel que o reproduz automatiza o problema em vez de resolvê-lo.
 
 **O que custa:** o painel deixa de responder "quanto falta entrar do que já foi vendido", que é uma pergunta legítima. A resposta certa exigiria cruzar por cronograma de parcelas, não por total. Melhor não responder do que responder errado.
 

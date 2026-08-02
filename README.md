@@ -2,7 +2,7 @@
 
 > **Uma página que o dono da corretora abre no celular e entende em dez segundos**, sem planilha, sem login e sem pedir relatório pra ninguém.
 >
-> É a terceira parte de um conjunto: a [base](https://github.com/Lucasnevesads/base-sintetica-seguros) cria o dado, a [auditoria](https://github.com/Lucasnevesads/auditoria-comissoes) confere, e este painel apresenta.
+> É a terceira parte de um conjunto: a [base](https://github.com/lucasnevesbr/base-sintetica-seguros) cria o dado, a [auditoria](https://github.com/lucasnevesbr/auditoria-comissoes) confere, e este painel apresenta.
 
 ![Dados sintéticos](https://img.shields.io/badge/dados-sintéticos-7C3AED?style=flat-square)
 ![Python](https://img.shields.io/badge/Python-3.14-3776AB?style=flat-square&logo=python&logoColor=white)
@@ -10,7 +10,7 @@
 
 ![Topo do painel da Norte Garantia. Título, período de 01/01/2025 a 31/12/2025 e um selo de dados sintéticos. Abaixo, um aviso destacado explicando que o painel usa duas réguas e nunca as subtrai. Em seguida, três cartões: produção comercial de R$ 4.080.660,80 em 791 negócios, comissão recebida de R$ 3.450.030,87 em 1.307 parcelas, e a receber de R$ 446.084,93 em 229 parcelas.](docs/print.png)
 
-🔗 **Ver funcionando:** https://lucasnevesads.github.io/painel-producao/
+🔗 **Ver funcionando:** https://lucasnevesbr.github.io/painel-producao/
 
 A imagem é o tema claro. A página também tem tema escuro, escolhido e não invertido, que aparece sozinho se o seu sistema estiver nele.
 
@@ -61,10 +61,10 @@ Página no ar, 22 KB, sem servidor e sem banco:
 A base vem de outro projeto. Clone os dois lado a lado:
 
 ```bash
-git clone https://github.com/Lucasnevesads/base-sintetica-seguros
+git clone https://github.com/lucasnevesbr/base-sintetica-seguros
 cd base-sintetica-seguros && pip install -r requirements.txt && python src/gerar_base.py && cd ..
 
-git clone https://github.com/Lucasnevesads/painel-producao
+git clone https://github.com/lucasnevesbr/painel-producao
 cd painel-producao
 pip install -r requirements.txt
 python src/gerar_painel.py
@@ -113,7 +113,7 @@ Medido no navegador, não no olho: em 375px, zero elementos com largura maior qu
 
 ## 🧪 Sobre os dados
 
-Os dados são da **Norte Garantia**, uma corretora de seguro garantia **fictícia**, gerada em [`base-sintetica-seguros`](https://github.com/Lucasnevesads/base-sintetica-seguros). As seguradoras também são fictícias.
+Os dados são da **Norte Garantia**, uma corretora de seguro garantia **fictícia**, gerada em [`base-sintetica-seguros`](https://github.com/lucasnevesbr/base-sintetica-seguros). As seguradoras também são fictícias.
 
 Nenhum dado de cliente ou de empresa real é usado, em nenhuma etapa.
 

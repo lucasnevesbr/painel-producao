@@ -10,7 +10,7 @@ Cada número carrega o nome da régua que usou, e nenhuma função aqui
 subtrai uma da outra. Foi essa subtração que fez a diretoria procurar
 R$ 630 mil que nunca estiveram faltando.
 
-Ver: https://github.com/Lucasnevesads/auditoria-comissoes
+Ver: https://github.com/lucasnevesbr/auditoria-comissoes
 """
 
 MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"]
